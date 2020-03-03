@@ -1,7 +1,7 @@
 <template>
   <div class="menu">
     <h1>{{ msg }}</h1>
-    <button v-on:click="initCreateCampaign">Create New Campaign</button>
+    <button class="btn" v-on:click="initCreateCampaign">Create New Campaign</button>
   </div>
 </template>
 
@@ -13,7 +13,7 @@ export default {
   },
   methods: {
     initCreateCampaign: function () {
-      console.log("Campaign creator launched");
+      console.log("Campaign creator launched")
     }
   }
 }
