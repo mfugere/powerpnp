@@ -1,17 +1,5 @@
 <template>
   <div>
-    <div id="noCognitoMessage" class="configMessage" style="display: none;">
-        <div class="backdrop"></div>
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">No Cognito User Pool Configured</h3>
-            </div>
-            <div class="panel-body">
-                <p>There is no user pool configured.</p>
-            </div>
-        </div>
-    </div>
-
     <header>
     </header>
 
