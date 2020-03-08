@@ -5,6 +5,7 @@ import Config from "aws-sdk"
 import App from "./App.vue"
 import Register from "./components/Register.vue"
 import Login from "./components/Login.vue"
+import Menu from "./components/Menu.vue"
 import CognitoConfig from "./config.js"
 
 Vue.config.productionTip = false
@@ -24,7 +25,8 @@ Vue.use(VueRouter)
 const router = new VueRouter({
   routes: [
     { path: "/Register", component: Register, props: { userPool: userPool }},
-    { path: "/Login", component: Login, props: { userPool: userPool }}
+    { path: "/Login", component: Login, props: { userPool: userPool }},
+    { path: "/Menu", component: Menu, props: { userPool: userPool }}
   ]
 })
 

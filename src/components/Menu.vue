@@ -1,6 +1,6 @@
 <template>
   <div class="menu">
-    <h1>{{ msg }}</h1>
+    <h1>What would you like to do?</h1>
     <button class="btn" v-on:click="initCreateCampaign">Create New Campaign</button>
   </div>
 </template>
@@ -9,7 +9,7 @@
 export default {
   name: "Menu",
   props: {
-    msg: String
+    userPool: Object
   },
   methods: {
     initCreateCampaign: function () {
