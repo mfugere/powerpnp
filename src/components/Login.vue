@@ -18,9 +18,6 @@ import * as AmazonCognitoIdentity from "amazon-cognito-identity-js"
 
 export default {
   name: "Login",
-  props: {
-    userPool: Object
-  },
   data: function () {
     return {
       username: "",
@@ -28,6 +25,9 @@ export default {
     }
   },
   computed: {
+    userPool: function () {
+      return this.$store.state.userPool
+    },
     formComplete: function () {
       return (this.username.length !== 0 && this.password.length !== 0)
     }
@@ -43,7 +43,7 @@ export default {
       var data = this
       cognitoUser.authenticateUser(authenticationDetails, {
         onSuccess: function () {
-          data.$emit("logged-in")
+          data.$store.commit("setCurrentUser", data.userPool.getCurrentUser())
           data.$router.push("/Menu")
         },
         onFailure: function (err) {

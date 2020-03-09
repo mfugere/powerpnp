@@ -23,9 +23,6 @@ import * as AmazonCognitoIdentity from "amazon-cognito-identity-js"
 
 export default {
   name: "Register",
-  props: {
-    userPool: Object
-  },
   data: function () {
     return {
       username: "",
@@ -36,6 +33,9 @@ export default {
     }
   },
   computed: {
+    userPool: function () {
+      return this.$store.state.userPool
+    },
     formComplete: function () {
       return (this.username.length !== 0 && this.email.length !== 0
         && this.password1.length !== 0 && this.password2.length !== 0)
@@ -46,9 +46,11 @@ export default {
       if (this.password1 === this.password2) {
         var data = this
         var emailAttribute = new AmazonCognitoIdentity.CognitoUserAttribute({ Name: "email", Value: this.email })
-        this.userPool.signUp(this.username, this.password1, [emailAttribute], null, function (err) {
-          if (!err) data.registered = true
-          else console.error(err)
+        this.userPool.signUp(this.username, this.password1, [emailAttribute], null, function (err, result) {
+          if (!err) {
+            data.registered = true
+            this.$store.commit("setCurrentUser", result.user)
+          } else console.error(err)
         })
       } else console.log("Passwords are case-sensitive, and must match.")
     }

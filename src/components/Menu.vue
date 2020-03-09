@@ -8,9 +8,6 @@
 <script>
 export default {
   name: "Menu",
-  props: {
-    userPool: Object
-  },
   methods: {
     initCreateCampaign: function () {
       console.log("Campaign creator launched")
