@@ -3,12 +3,18 @@
     <header>
     </header>
 
-    <section class="form-wrap">
+    <section class="container">
       <h1>Sign In</h1>
       <p>Please enter your user name and password. Then click 'Log in' to continue.</p>
-      <input type="text" v-model="username" placeholder="User name">
-      <input type="password" v-model="password" placeholder="Password">
-      <button class="btn btn-submit" v-on:click="signin" :disabled="!formComplete">Log in</button>
+      <div class="form-group row">
+        <label for="logUsername" class="col-sm-2 col-form-label text-right">User name</label>
+        <input type="text" id="logUsername" class="col-sm-10 form-control" v-model="username">
+      </div>
+      <div class="form-group row">
+        <label for="logPassword" class="col-sm-2 col-form-label text-right">Password</label>
+        <input type="password" id="logPassword" class="col-sm-10 form-control" v-model="password">
+      </div>
+      <button class="btn btn-primary" v-on:click="signin" :disabled="!formComplete">Log in</button>
     </section>
   </div>
 </template>

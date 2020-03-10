@@ -3,16 +3,29 @@
     <header>
     </header>
 
-    <section class="form-wrap">
+    <section class="container">
       <div v-if="registered" class="alert alert-success">Registration successful. Please check your email inbox or spam folder for your verification link.</div>
       <div v-else>
         <h1>Register</h1>
         <p>Please enter your desired user name, email address, and password. Then confirm your password and click 'Register' to sign up!</p>
-        <input type="text" v-model="username" placeholder="User name">
-        <input type="email" v-model="email" placeholder="Email address">
-        <input type="password" v-model="password1" placeholder="Password">
-        <input type="password" v-model="password2" placeholder="Confirm password">
-        <button class="btn btn-submit" v-on:click="register" :disabled="!formComplete">Register</button>
+        <div class="form-group row">
+          <label for="regUsername" class="col-sm-2 col-form-label text-right">User name</label>
+          <input type="text" id="regUsername" class="col-sm-10 form-control" v-model="username">
+        </div>
+        <div class="form-group row">
+          <label for="regEmail" class="col-sm-2 col-form-label text-right">Email address</label>
+          <input type="email" id="regEmail" class="col-sm-10 form-control" v-model="email">
+        </div>
+        <div class="form-group row">
+          <label for="regPassword1" class="col-sm-2 col-form-label text-right">Desired password</label>
+          <input type="password" id="regPassword1" class="col-sm-10 form-control" v-model="password1">
+          <small id="passwordHelp" class="offset-sm-2 form-text text-muted">Password must be at least 8 characters long.</small>
+        </div>
+        <div class="form-group row">
+          <label for="regPassword2" class="col-sm-2 col-form-label text-right">Confirm password</label>
+          <input type="password" id="regPassword2" class="col-sm-10 form-control" v-model="password2">
+        </div>
+        <button class="btn btn-primary" v-on:click="register" :disabled="!formComplete">Register</button>
       </div>
     </section>
   </div>
