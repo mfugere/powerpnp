@@ -3,6 +3,9 @@
     <div class="container" id="nav">
       <ul class="row nav justify-content-center">
         <li class="nav-item">
+          <router-link class="nav-link" to="/">Home</router-link>
+        </li>
+        <li class="nav-item">
           <router-link class="nav-link" v-if="!loggedIn" to="/Register">Register</router-link>
         </li>
         <li class="nav-item">

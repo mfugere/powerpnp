@@ -4,7 +4,7 @@
     </header>
 
     <section class="container">
-      <h1>Sign In</h1>
+      <h1>Log In</h1>
       <p>Please enter your user name and password. Then click 'Log in' to continue.</p>
       <div class="form-group row">
         <label for="logUsername" class="col-sm-2 col-form-label text-right">User name</label>

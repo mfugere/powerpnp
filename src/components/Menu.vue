@@ -1,8 +1,8 @@
 <template>
-  <div class="menu">
+  <section class="container">
     <h1>What would'st thou deau?</h1>
     <button class="btn btn-primary" v-on:click="initCreateCampaign">Create New Campaign</button>
-  </div>
+  </section>
 </template>
 
 <script>
