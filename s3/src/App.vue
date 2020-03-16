@@ -53,7 +53,9 @@ export default {
       return this.$store.state.currentUser
     },
     loggedIn: function () {
-      return this.$store.getters.loggedIn
+      var loggedIn = this.$store.getters.loggedIn
+      if (loggedIn) this.$store.commit("setAuthToken", loggedIn)
+      return loggedIn
     }
   },
   methods: {

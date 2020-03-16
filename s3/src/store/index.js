@@ -6,7 +6,8 @@ Vue.use(Vuex)
 export const store = new Vuex.Store({
   state: {
     userPool: null,
-    currentUser: null
+    currentUser: null,
+    authToken: ""
   },
   getters: {
     loggedIn: function (state) {
@@ -14,12 +15,12 @@ export const store = new Vuex.Store({
         return state.currentUser.getSession(function (err, session) {
           if (err) {
             console.error(err)
-            return false
+            return null
           } else if (!session.isValid()) return false
-          else return true
+          else return session.getIdToken().getJwtToken()
         })
       } else {
-        return false
+        return null
       }
     }
   },
@@ -29,6 +30,9 @@ export const store = new Vuex.Store({
     },
     setCurrentUser: function (state, currentUser) {
       state.currentUser = currentUser
+    },
+    setAuthToken: function (state, authToken) {
+      state.authToken = authToken
     }
   }
 })

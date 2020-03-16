@@ -48,8 +48,9 @@ export default {
       var cognitoUser = new AmazonCognitoIdentity.CognitoUser({ Username: this.username, Pool: this.userPool })
       var data = this
       cognitoUser.authenticateUser(authenticationDetails, {
-        onSuccess: function () {
+        onSuccess: function (session) {
           data.$store.commit("setCurrentUser", data.userPool.getCurrentUser())
+          data.$store.commit("setAuthToken", session.getIdToken().getJwtToken())
           data.$router.push("/Menu")
         },
         onFailure: function (err) {
