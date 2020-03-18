@@ -4,21 +4,8 @@ const AWS = require("aws-sdk")
 const ddb = new AWS.DynamoDB.DocumentClient()
 
 exports.handler = (event, context, callback) => {
-  if (!event.requestContext.authorizer) {
-    callback(null, {
-      statusCode: 501,
-      body: JSON.stringify({
-        Error: "Authorization not configured",
-        Reference: context.awsRequestId
-      }),
-      headers: {
-        "Access-Control-Allow-Origin": "*"
-      }
-    })
-  }
-
   const accountId = toUrlString(randomBytes(16))
-  const username = event.requestContext.authorizer.claims["cognito:username"]
+  const username = JSON.parse(event.body).data
 
   createAccount(accountId, username).then(() => {
     callback(null, {

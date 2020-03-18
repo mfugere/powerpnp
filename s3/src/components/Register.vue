@@ -62,7 +62,7 @@ export default {
         this.userPool.signUp(this.username, this.password1, [emailAttribute], null, function (err, result) {
           if (!err) {
             data.registered = true
-            this.$store.commit("setCurrentUser", result.user)
+            data.$store.dispatch("createAccount", { username: result.user.username })
           } else console.error(err)
         })
       } else console.log("Passwords are case-sensitive, and must match.")

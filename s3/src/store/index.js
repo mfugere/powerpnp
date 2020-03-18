@@ -1,7 +1,9 @@
 import Vue from "vue"
 import Vuex from "vuex"
+import axios from "axios"
+import CognitoConfig from "../config.js"
 
-Vue.use(Vuex)
+Vue.use(Vuex, axios)
 
 export const store = new Vuex.Store({
   state: {
@@ -33,6 +35,15 @@ export const store = new Vuex.Store({
     },
     setAuthToken: function (state, authToken) {
       state.authToken = authToken
+    }
+  },
+  actions: {
+    async createAccount(context, data) {
+      await axios.post(CognitoConfig.api.invokeUrl + "/account", {
+        data: data.username
+      }).catch(function (error) {
+        console.error(error)
+      })
     }
   }
 })
