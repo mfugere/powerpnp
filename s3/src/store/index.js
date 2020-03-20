@@ -34,14 +34,10 @@ export const store = new Vuex.Store({
       state.currentUser = currentUser
     },
     setAuthToken: function (state, authToken) {
-      state.authToken = authToken
+      state.currentUser.authToken = authToken
     },
     setUserAccount: function (state, account) {
       state.currentUser.account = account
-    },
-    signout: function(state, currentUser) {
-      state.currentUser = currentUser
-      state.authToken = ""
     }
   },
   actions: {
@@ -55,7 +51,7 @@ export const store = new Vuex.Store({
     async getAccount({ commit, state }) {
       var currentUser = state.currentUser
       await axios.get(CognitoConfig.api.invokeUrl + "/account?username=" + currentUser.username,
-        { headers: { "Authorization": state.authToken }}).then(function (result) {
+        { headers: { "Authorization": state.currentUser.authToken }}).then(function (result) {
           commit("setUserAccount", result.data.Item)
         }).catch(function (error) {
           console.error(error)

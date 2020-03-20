@@ -64,7 +64,7 @@ export default {
   methods: {
     signout: function () {
       this.currentUser.signOut()
-      this.$store.commit("signout", this.userPool.getCurrentUser())
+      this.$store.commit("setCurrentUser", this.userPool.getCurrentUser())
       this.$router.push("/Login")
     }
   }
