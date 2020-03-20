@@ -54,14 +54,17 @@ export default {
     },
     loggedIn: function () {
       var loggedIn = this.$store.getters.loggedIn
-      if (loggedIn) this.$store.commit("setAuthToken", loggedIn)
+      if (loggedIn) {
+        this.$store.commit("setAuthToken", loggedIn)
+        this.$store.dispatch("getAccount")
+      }
       return loggedIn
     }
   },
   methods: {
     signout: function () {
       this.currentUser.signOut()
-      this.$store.commit("setCurrentUser", this.userPool.getCurrentUser())
+      this.$store.commit("signout", this.userPool.getCurrentUser())
       this.$router.push("/Login")
     }
   }

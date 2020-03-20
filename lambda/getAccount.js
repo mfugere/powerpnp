@@ -4,16 +4,12 @@ const AWS = require("aws-sdk")
 const ddb = new AWS.DynamoDB.DocumentClient()
 
 exports.handler = (event, context, callback) => {
-  const username = JSON.parse(event.body).data
+  const username = event.queryStringParameters.username
 
-  createAccount(username).then(() => {
+  getAccount(username).then((result) => {
     callback(null, {
-      statusCode: 201,
-      body: JSON.stringify({
-        USERNAME: username,
-        GAMES: [],
-        CHARACTERS: []
-      }),
+      statusCode: 200,
+      body: JSON.stringify(result),
       headers: {
         "Access-Control-Allow-Origin": "*"
       }
@@ -33,13 +29,11 @@ exports.handler = (event, context, callback) => {
   })
 }
 
-let createAccount = (username) => {
-  return ddb.put({
+let getAccount = (username) => {
+  return ddb.get({
     TableName: "PPNPACCT",
-    Item: {
-      USERNAME: username,
-      GAMES: [],
-      CHARACTERS: []
+    Key: {
+      USERNAME: username
     }
   }).promise()
 }
