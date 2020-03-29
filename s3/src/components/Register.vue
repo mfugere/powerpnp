@@ -25,7 +25,7 @@
           <label for="regPassword2" class="col-sm-2 col-form-label text-right">Confirm password</label>
           <input type="password" id="regPassword2" class="col-sm-10 form-control" v-model="password2">
         </div>
-        <button class="btn btn-primary" v-on:click="register" :disabled="!formComplete">Register</button>
+        <button class="btn btn-primary" @click="register" :disabled="!formComplete">Register</button>
       </div>
     </section>
   </div>

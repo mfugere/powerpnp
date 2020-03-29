@@ -14,14 +14,12 @@
         <label for="logPassword" class="col-sm-2 col-form-label text-right">Password</label>
         <input type="password" id="logPassword" class="col-sm-10 form-control" v-model="password">
       </div>
-      <button class="btn btn-primary" v-on:click="signin" :disabled="!formComplete">Log in</button>
+      <button class="btn btn-primary" @click="$emit('login', $event, username, password)" :disabled="!formComplete">Log in</button>
     </section>
   </div>
 </template>
 
 <script>
-import * as AmazonCognitoIdentity from "amazon-cognito-identity-js"
-
 export default {
   name: "Login",
   data: function () {
@@ -36,27 +34,6 @@ export default {
     },
     formComplete: function () {
       return (this.username.length !== 0 && this.password.length !== 0)
-    }
-  },
-  methods: {
-    signin: function () {
-      var authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails({
-        Username: this.username,
-        Password: this.password
-      })
-
-      var cognitoUser = new AmazonCognitoIdentity.CognitoUser({ Username: this.username, Pool: this.userPool })
-      var data = this
-      cognitoUser.authenticateUser(authenticationDetails, {
-        onSuccess: function (session) {
-          data.$store.commit("setCurrentUser", data.userPool.getCurrentUser())
-          data.$store.commit("setAuthToken", session.getIdToken().getJwtToken())
-          data.$router.push("/Menu")
-        },
-        onFailure: function (err) {
-          console.error(err)
-        }
-      })
     }
   }
 }
