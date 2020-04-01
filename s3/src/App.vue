@@ -1,39 +1,82 @@
 <template>
   <div id="app">
-    <nav-menu :current-user="currentUser" @signout="signout"></nav-menu>
+    <div class="container" id="nav">
+      <div v-if="account && Object.keys(account).length > 0" class="row justify-content-center">Welcome, {{account.USERNAME}}!</div>
+      <ul class="row nav justify-content-center">
+        <template v-for="link in activeLinks">
+          <li class="nav-item" :key="link.componentName">
+            <a class="nav-link" @click="setView(link.componentName)">{{link.title}}</a>
+          </li>
+        </template>
+      </ul>
+    </div>
     <div class="container" id="main">
-      <router-view @login="login"></router-view>
+      <component :is="currentView" @login="login"></component>
     </div>
   </div>
 </template>
 
 <script>
 import "bootstrap-css-only"
-import Nav from "./components/Nav.vue"
+import Welcome from "./components/Welcome.vue"
+import Register from "./components/Register.vue"
+import Login from "./components/Login.vue"
+import Menu from "./components/Menu.vue"
+import { mapActions } from "vuex"
 
 export default {
   name: "App",
-  components: { "nav-menu": Nav },
-  beforeCreate: function () {
-    this.$store.dispatch("initUserPool")
+  components: {
+    "Welcome": Welcome,
+    "Register": Register,
+    "Login": Login,
+    "Menu": Menu
+  },
+  created: function () {
+    this.initUserPool()
   },
   mounted: function () {
-    this.$store.dispatch("initUser").then((currentUser) => { this.currentUser = currentUser })
+    this.initUser().then((account) => {
+      this.account = account
+    })
   },
   data: function () {
-    return { currentUser: {} }
+    return {
+      account: null,
+      currentView: "Welcome",
+      links: [ // renderKey values: -1 (not logged in), 0 (either), 1 (logged in)
+        { title: "Home", componentName: "Welcome", renderKey: 0 },
+        { title: "Register", componentName: "Register", renderKey: -1 },
+        { title: "Log in", componentName: "Login", renderKey: -1 },
+        { title: "Main menu", componentName: "Menu", renderKey: 1 },
+        { title: "Sign out", componentName: "Signout", renderKey: 1 }
+      ]
+    }
+  },
+  computed: {
+    activeLinks: function () {
+      var loggedIn = (this.account && Object.keys(this.account).length > 0) ? 1 : -1
+      return this.links.filter(link => (loggedIn * link.renderKey) >= 0)
+    }
   },
   methods: {
-    login: function (event, username, password) {
-      this.$store.dispatch("login", { username: username, password: password }).then(() => {
-        this.currentUser = this.$store.state.currentUser
-        this.$router.push("/Menu")
-      })
+    ...mapActions([
+      "initUserPool",
+      "initUser",
+      "signout"
+    ]),
+    setView: function (componentName) {
+      if (componentName === "Signout") {
+        this.signout().then(() => {
+          this.account = this.$store.state.account
+          this.currentView = "Login"
+        })
+      } else this.currentView = componentName
     },
-    signout: function () {
-      this.$store.dispatch("signout").then(() => {
-        this.currentUser = this.$store.state.currentUser
-        this.$router.push("/Login")
+    login: function (event, sessionToken) {
+      this.initUser({ sessionToken: sessionToken }).then((account) => {
+        this.account = account
+        this.setView("Menu")
       })
     }
   }
