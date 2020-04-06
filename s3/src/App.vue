@@ -5,13 +5,13 @@
       <ul class="row nav justify-content-center">
         <template v-for="link in activeLinks">
           <li class="nav-item" :key="link.componentName">
-            <a class="nav-link" @click="setView(link.componentName)">{{link.title}}</a>
+            <a class="nav-link" href="#" @click="setView(link.componentName)">{{link.title}}</a>
           </li>
         </template>
       </ul>
     </div>
     <div class="container" id="main">
-      <component :is="currentView" @login="login"></component>
+      <component :is="currentView" :account="account" @login="login"></component>
     </div>
   </div>
 </template>
@@ -22,6 +22,7 @@ import Welcome from "./components/Welcome.vue"
 import Register from "./components/Register.vue"
 import Login from "./components/Login.vue"
 import Menu from "./components/Menu.vue"
+import Faq from "./components/Faq.vue"
 import { mapActions } from "vuex"
 
 export default {
@@ -30,7 +31,8 @@ export default {
     "Welcome": Welcome,
     "Register": Register,
     "Login": Login,
-    "Menu": Menu
+    "Menu": Menu,
+    "Faq": Faq
   },
   created: function () {
     this.initUserPool()
@@ -49,6 +51,7 @@ export default {
         { title: "Register", componentName: "Register", renderKey: -1 },
         { title: "Log in", componentName: "Login", renderKey: -1 },
         { title: "Main menu", componentName: "Menu", renderKey: 1 },
+        { title: "FAQ", componentName: "Faq", renderKey: 0 },
         { title: "Sign out", componentName: "Signout", renderKey: 1 }
       ]
     }

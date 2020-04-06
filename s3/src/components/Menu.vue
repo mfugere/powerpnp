@@ -1,17 +1,53 @@
 <template>
   <section class="container">
     <h1>What would'st thou deau?</h1>
-    <button class="btn btn-primary" v-on:click="initCreateCampaign">Create New Campaign</button>
+    <div>
+      <h2>My Characters</h2>
+      <ul class="list-group list-group-horizontal" v-if="account && Object.keys(account).length > 0">
+        <template v-for="character in account.CHARACTERS">
+          <li class="list-group-item borderless" :key="character.ref"><img src="@/assets/menu_icon_char.png" alt="character.name"></li>
+        </template>
+        <li class="list-group-item borderless"><img src="@/assets/menu_icon_add.png" alt="Create a new character"></li>
+      </ul>
+    </div>
+    <div>
+      <h2>My Campaigns</h2>
+      <ul class="list-group list-group-horizontal" v-if="account && Object.keys(account).length > 0">
+        <template v-for="campaign in createdCampaigns">
+          <li class="list-group-item borderless" :key="campaign.ref"><img src="@/assets/menu_icon_game.png" alt="campaign.name"></li>
+        </template>
+        <li class="list-group-item borderless"><img src="@/assets/menu_icon_add.png" alt="Create a new campaign"></li>
+      </ul>
+    </div>
+    <div>
+      <h2>Join a Campaign</h2>
+      <ul class="list-group list-group-horizontal" v-if="account && Object.keys(account).length > 0">
+        <template v-for="campaign in joinedCampaigns">
+          <li class="list-group-item borderless" :key="campaign.ref"><img src="@/assets/menu_icon_game.png" alt="campaign.name"></li>
+        </template>
+        <li class="list-group-item borderless"><img src="@/assets/menu_icon_add.png" alt="Join a new campaign"></li>
+      </ul>
+    </div>
   </section>
 </template>
 
 <script>
 export default {
   name: "Menu",
-  methods: {
-    initCreateCampaign: function () {
-      console.log("Campaign creator launched")
+  props: [ "account" ],
+  computed: {
+    createdCampaigns: function () {
+      return this.account.GAMES.filter(game => game.role === "gm")
+    },
+    joinedCampaigns: function () {
+      return this.account.GAMES.filter(game => game.role === "player")
     }
   }
 }
 </script>
+
+<style>
+li.borderless {
+  border: 0 none;
+}
+</style>
