@@ -5,6 +5,10 @@ import Config from "aws-sdk"
 import CognitoConfig from "../config.js"
 import { CognitoUserPool } from "amazon-cognito-identity-js"
 
+const instance = axios.create({
+  baseURL: CognitoConfig.api.invokeUrl
+})
+
 Vue.use(Vuex, axios)
 
 export const store = new Vuex.Store({
@@ -23,6 +27,7 @@ export const store = new Vuex.Store({
     },
     setAuthToken: function (state, authToken) {
       state.authToken = authToken
+      instance.defaults.headers.common["Authorization"] = authToken
     },
     setUserAccount: function (state, account) {
       state.account = account
@@ -51,11 +56,9 @@ export const store = new Vuex.Store({
       var cognitoUser = state.userPool.getCurrentUser()
       if (cognitoUser) {
         commit("setCognitoUser", cognitoUser)
-        var authToken
-        if (!payload) authToken = await dispatch("getSession", { cuser: cognitoUser })
-        else authToken = payload.sessionToken
+        var authToken = (payload) ? payload.sessionToken : await dispatch("getSession", { cuser: cognitoUser })
         commit("setAuthToken", authToken)
-        var result = await dispatch("getAccount", { cuser: cognitoUser, token: authToken })
+        var result = await dispatch("getAccount", { cuser: cognitoUser })
         commit("setUserAccount", result.data.Item)
         return result.data.Item
       } else return {}
@@ -68,15 +71,21 @@ export const store = new Vuex.Store({
       })
     },
     async createAccount(context, payload) {
-      await axios.post(CognitoConfig.api.invokeUrl + "/account", {
+      await instance.post("/account", {
         data: payload.username
       }).catch(function (error) {
         throw new Error(error)
       })
     },
     async getAccount(context, payload) {
-      return await axios.get(CognitoConfig.api.invokeUrl + "/account?username=" + payload.cuser.username,
-        { headers: { "Authorization": payload.token }})
+      return await instance.get("/account?username=" + payload.cuser.username)
+    },
+    async updateCharacter(context, payload) {
+      await instance.post("/character", {
+        data: payload.cname
+      }).catch(function (error) {
+        throw new Error(error)
+      })
     }
   }
 })

@@ -11,7 +11,7 @@
       </ul>
     </div>
     <div class="container" id="main">
-      <component :is="currentView" :account="account" @login="login"></component>
+      <component :is="currentView" :account="account" @login="login" @setView="setViewFromEvent"></component>
     </div>
   </div>
 </template>
@@ -23,6 +23,7 @@ import Register from "./components/Register.vue"
 import Login from "./components/Login.vue"
 import Menu from "./components/Menu.vue"
 import Faq from "./components/Faq.vue"
+import Character from "./components/Character.vue"
 import { mapActions } from "vuex"
 
 export default {
@@ -32,7 +33,8 @@ export default {
     "Register": Register,
     "Login": Login,
     "Menu": Menu,
-    "Faq": Faq
+    "Faq": Faq,
+    "Character": Character
   },
   created: function () {
     this.initUserPool()
@@ -68,6 +70,9 @@ export default {
       "initUser",
       "signout"
     ]),
+    setViewFromEvent: function (event, componentName) {
+      this.setView(componentName)
+    },
     setView: function (componentName) {
       if (componentName === "Signout") {
         this.signout().then(() => {

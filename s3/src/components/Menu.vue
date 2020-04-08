@@ -7,7 +7,9 @@
         <template v-for="character in account.CHARACTERS">
           <li class="list-group-item borderless" :key="character.ref"><img src="@/assets/menu_icon_char.png" alt="character.name"></li>
         </template>
-        <li class="list-group-item borderless"><img src="@/assets/menu_icon_add.png" alt="Create a new character"></li>
+        <li class="list-group-item borderless">
+          <img src="@/assets/menu_icon_add.png" alt="Create a new character" @click="$emit('setView', $event, 'Character')">
+        </li>
       </ul>
     </div>
     <div>
