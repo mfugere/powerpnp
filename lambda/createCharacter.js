@@ -4,10 +4,11 @@ const ddb = new AWS.DynamoDB.DocumentClient()
 
 exports.handler = (event, context, callback) => {
   const cname = JSON.parse(event.body).data
+  const username = event.requestContext.authorizer.claims["cognito:username"]
   const refId = crypto.randomBytes(10)
   const ref = "/character/" + refId.toString("hex")
 
-  createCharacter(cname, ref).then(() => {
+  createCharacter(cname, ref, username).then(() => {
     callback(null, {
       statusCode: 201,
       body: JSON.stringify({
@@ -33,7 +34,7 @@ exports.handler = (event, context, callback) => {
   })
 }
 
-let createCharacter = (cname, ref) => {
+let createCharacter = (cname, ref, username) => {
   return ddb.put({
     TableName: "PPNPCHAR",
     Item: {
@@ -41,7 +42,8 @@ let createCharacter = (cname, ref) => {
       NAME: cname,
       RACE: {},
       CLASS: {},
-      STATS: {}
+      STATS: {},
+      USERNAME: username
     }
   }).promise()
 }
