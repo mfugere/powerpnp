@@ -81,7 +81,7 @@ export const store = new Vuex.Store({
       return await instance.get("/account?username=" + payload.cuser.username)
     },
     async updateCharacter(context, payload) {
-      await instance.post("/character", {
+      return await instance.post("/character", {
         data: payload.cname
       }).catch(function (error) {
         throw new Error(error)

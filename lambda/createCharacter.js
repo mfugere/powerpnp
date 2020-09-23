@@ -9,15 +9,30 @@ exports.handler = (event, context, callback) => {
   const ref = "/character/" + refId.toString("hex")
 
   createCharacter(cname, ref, username).then(() => {
-    callback(null, {
-      statusCode: 201,
-      body: JSON.stringify({
-        REF: ref,
-        NAME: cname
-      }),
-      headers: {
-        "Access-Control-Allow-Origin": "*"
-      }
+    let newRefs = [{
+      REF: ref,
+      NAME: cname
+    }]
+    updateAccount(newRefs, username).then((result) => {
+      callback(null, {
+        statusCode: 201,
+        body: JSON.stringify(result),
+        headers: {
+          "Access-Control-Allow-Origin": "*"
+        }
+      })
+    }).catch((err) => {
+      console.error(err);
+      callback(null, {
+        statusCode: 500,
+        body: JSON.stringify({
+          Error: err.message,
+          Reference: context.awsRequestId
+        }),
+        headers: {
+          "Access-Control-Allow-Origin": "*"
+        }
+      })
     })
   }).catch((err) => {
     console.error(err);
@@ -45,5 +60,18 @@ let createCharacter = (cname, ref, username) => {
       STATS: {},
       USERNAME: username
     }
+  }).promise()
+}
+
+let updateAccount = (newRefs, username) => {
+  return ddb.update({
+    TableName: "PPNPACCT",
+    Key: {
+      USERNAME: username
+    },
+    UpdateExpression: "SET #col = list_append(#col, :r)",
+    ExpressionAttributeNames: { "#col": "CHARACTERS" },
+    ExpressionAttributeValues: { ":r": newRefs },
+    ReturnValues: "ALL_NEW"
   }).promise()
 }

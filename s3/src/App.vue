@@ -70,8 +70,12 @@ export default {
       "initUser",
       "signout"
     ]),
-    setViewFromEvent: function (event, componentName) {
-      this.setView(componentName)
+    setViewFromEvent: function (event, componentName, dirty) {
+      if (dirty) this.initUser().then((result) => {
+        this.account = result
+        this.setView(componentName)
+      })
+      else this.setView(componentName)
     },
     setView: function (componentName) {
       if (componentName === "Signout") {

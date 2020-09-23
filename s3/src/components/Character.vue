@@ -35,7 +35,7 @@ export default {
         cname: this.cname
       }
       this.$store.dispatch("updateCharacter", charObj)
-        .then(() => this.$emit("setView", this.$event, "Menu"))
+        .then((result) => this.$emit("setView", this.$event, "Menu", result.data))
     }
   }
 }
