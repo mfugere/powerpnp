@@ -5,10 +5,12 @@
       <h2>My Characters</h2>
       <ul class="list-group list-group-horizontal" v-if="account && Object.keys(account).length > 0">
         <template v-for="character in account.CHARACTERS">
-          <li class="list-group-item borderless" :key="character.ref"><img src="@/assets/menu_icon_char.png" alt="character.name"></li>
+          <li class="list-group-item borderless" :key="character.REF">
+            <img src="@/assets/menu_icon_char.png" alt="character.NAME" @click="editCharacter('view' + character.REF)">
+          </li>
         </template>
         <li class="list-group-item borderless">
-          <img src="@/assets/menu_icon_add.png" alt="Create a new character" @click="$emit('setView', $event, 'Character')">
+          <img src="@/assets/menu_icon_add.png" alt="Create a new character" @click="editCharacter('create')">
         </li>
       </ul>
     </div>
@@ -34,6 +36,8 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex"
+
 export default {
   name: "Menu",
   props: [ "account" ],
@@ -43,6 +47,13 @@ export default {
     },
     joinedCampaigns: function () {
       return this.account.GAMES.filter(game => game.role === "player")
+    }
+  },
+  methods: {
+    ...mapMutations([ "setCharacterEditMode" ]),
+    editCharacter: function (mode) {
+      this.setCharacterEditMode(mode)
+      this.$emit("setView", this.$event, "Character")
     }
   }
 }

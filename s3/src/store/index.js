@@ -16,7 +16,8 @@ export const store = new Vuex.Store({
     userPool: null,
     cognitoUser: null,
     authToken: null,
-    account: {}
+    account: {},
+    characterEditMode: "create"
   },
   mutations: {
     setUserPool: function (state, userPool) {
@@ -31,6 +32,9 @@ export const store = new Vuex.Store({
     },
     setUserAccount: function (state, account) {
       state.account = account
+    },
+    setCharacterEditMode: function (state, characterEditMode) {
+      state.characterEditMode = characterEditMode
     }
   },
   actions: {
