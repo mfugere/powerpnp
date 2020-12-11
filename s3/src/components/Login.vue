@@ -6,6 +6,9 @@
     <section class="container">
       <h1>Log In</h1>
       <p>Please enter your user name and password. Then click 'Log in' to continue.</p>
+      <div class="row justify-content-md-center" v-if="errMsg">
+        <div class="col-sm-6 alert alert-danger">{{errMsg}}</div>
+      </div>
       <div class="form-group row">
         <label for="logUsername" class="col-sm-2 col-form-label text-right">User name</label>
         <input type="text" id="logUsername" class="col-sm-10 form-control" v-model="username">
@@ -28,6 +31,7 @@ export default {
     return {
       username: "",
       password: "",
+      errMsg: ""
     }
   },
   computed: {
@@ -40,6 +44,7 @@ export default {
   },
   methods: {
     login: function () {
+      this.errMsg = ""
       var authenticationDetails = new AuthenticationDetails({
         Username: this.username,
         Password: this.password
@@ -47,7 +52,7 @@ export default {
       var cognitoUser = new CognitoUser({ Username: this.username, Pool: this.userPool })
       cognitoUser.authenticateUser(authenticationDetails, {
         onSuccess: (session) => this.$emit("login", this.$event, session.getIdToken().getJwtToken()),
-        onFailure: (err) => console.error(err)
+        onFailure: (err) => this.errMsg = err.message
       })
     }
   }
