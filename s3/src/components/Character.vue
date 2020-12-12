@@ -41,7 +41,7 @@ export default {
   mounted: function () {
     if (this.$store.state.characterEditMode !== "create") {
       var ref = this.$store.state.characterEditMode.split("/")[2]
-      this.getCharacter({ ref: "/character/" + ref }).then((result) => {
+      this.getCharacter({ ref: ref }).then((result) => {
         var character = result.data.Item
         this.cname = character.NAME
       })
@@ -53,12 +53,15 @@ export default {
     }
   },
   methods: {
-    ...mapActions([ "getCharacter" ]),
+    ...mapActions([
+      "getCharacter",
+      "updateCharacter"
+    ]),
     update: function () {
       var charObj = {
         cname: this.cname
       }
-      this.$store.dispatch("updateCharacter", charObj)
+      this.updateCharacter(charObj)
         .then((result) => this.$emit("setView", this.$event, "Menu", result.data))
     }
   }

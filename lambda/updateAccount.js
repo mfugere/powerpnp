@@ -2,14 +2,9 @@ const AWS = require("aws-sdk")
 const ddb = new AWS.DynamoDB.DocumentClient()
 
 exports.handler = (event, context, callback) => {
-  const message = JSON.parse(event.Records[0].Sns.Message)
-  console.log("Message received from SNS: ", message)
-  let colName = message.REF.split("/")[1].toUpperCase() + "S"
-  let username = message.USERNAME
-  let ref = [{
-    REF: message.REF,
-    NAME: message.NAME
-  }]
+  let username = event.username
+  let colName = event.res.toUpperCase() + "S"
+  let ref = event.ref
 
   updateAccount(colName, username, ref).then((returnValue) => {
     callback(null, {
@@ -43,6 +38,6 @@ let updateAccount = (colName, username, ref) => {
     UpdateExpression: "SET #col = list_append(#col, :r)",
     ExpressionAttributeNames: { "#col": colName },
     ExpressionAttributeValues: { ":r": ref },
-    ReturnValues: "UPDATED_NEW"
+    ReturnValues: "ALL_NEW"
   }).promise()
 }
