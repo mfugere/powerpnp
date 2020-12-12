@@ -90,6 +90,9 @@ export const store = new Vuex.Store({
       }).catch(function (error) {
         throw new Error(error)
       })
+    },
+    async getCharacter(context, payload) {
+      return await instance.get("/character?ref=" + payload.ref)
     }
   }
 })

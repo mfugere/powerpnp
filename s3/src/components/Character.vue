@@ -10,7 +10,7 @@
     </section>
     <section class="container" v-if="baseMode === 'view'">
       <div class="card">
-        <h3 class="card-header">{{activeCharacter.NAME}}</h3>
+        <h3 class="card-header">{{cname}}</h3>
         <div class="card-body">Here are some details about your character.</div>
       </div>
     </section>
@@ -18,6 +18,8 @@
 </template>
 
 <script>
+import { mapActions } from "vuex"
+
 export default {
   name: "Character",
   props: [ "account" ],
@@ -36,19 +38,22 @@ export default {
       }
     }
   },
+  mounted: function () {
+    if (this.$store.state.characterEditMode !== "create") {
+      var ref = this.$store.state.characterEditMode.split("/")[2]
+      this.getCharacter({ ref: "/character/" + ref }).then((result) => {
+        var character = result.data.Item
+        this.cname = character.NAME
+      })
+    }
+  },
   computed: {
     baseMode: function () {
       return this.$store.state.characterEditMode.split("/")[0]
-    },
-    activeCharacter: function () {
-      if (this.$store.state.characterEditMode === "create") return ""
-      else {
-        var ref = this.$store.state.characterEditMode.split("/")[2]
-        return this.account.CHARACTERS.find((character => character.REF === "/character/" + ref))
-      }
     }
   },
   methods: {
+    ...mapActions([ "getCharacter" ]),
     update: function () {
       var charObj = {
         cname: this.cname
