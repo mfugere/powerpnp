@@ -5,8 +5,9 @@ exports.handler = (event, context, callback) => {
   let username = event.username
   let colName = event.res.toUpperCase() + "S"
   let ref = event.ref
+  let operation = event.operation
 
-  updateAccount(colName, username, ref).then((returnValue) => {
+  updateAccount(colName, username, ref, operation).then((returnValue) => {
     callback(null, {
       statusCode: 200,
       body: JSON.stringify(returnValue),
@@ -29,15 +30,20 @@ exports.handler = (event, context, callback) => {
   })
 }
 
-let updateAccount = (colName, username, ref) => {
-  return ddb.update({
+let updateAccount = (colName, username, ref, operation) => {
+  let params = {
     TableName: "PPNPACCT",
     Key: {
       USERNAME: username
     },
-    UpdateExpression: "SET #col = list_append(#col, :r)",
     ExpressionAttributeNames: { "#col": colName },
-    ExpressionAttributeValues: { ":r": ref },
     ReturnValues: "ALL_NEW"
-  }).promise()
+  }
+
+  if (operation === "create") {
+    params.UpdateExpression = "SET #col = list_append(#col, :r)"
+    params.ExpressionAttributeValues = { ":r": ref }
+  } else if (operation === "delete") params.UpdateExpression = "REMOVE #col[" + ref + "]"
+
+  return ddb.update(params).promise()
 }

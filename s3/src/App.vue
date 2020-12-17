@@ -103,4 +103,8 @@ export default {
   text-align: center;
   margin-top: 20px;
 }
+
+.btn {
+  margin-right: 5px;
+}
 </style>

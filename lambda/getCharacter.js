@@ -5,7 +5,7 @@ const ddb = new AWS.DynamoDB.DocumentClient()
 exports.handler = (event, context, callback) => {
   const ref = event.queryStringParameters.ref
 
-  getAccount(ref).then((result) => {
+  getCharacter(ref).then((result) => {
     callback(null, {
       statusCode: 200,
       body: JSON.stringify(result),
@@ -28,7 +28,7 @@ exports.handler = (event, context, callback) => {
   })
 }
 
-let getAccount = (ref) => {
+let getCharacter = (ref) => {
   return ddb.get({
     TableName: "PPNPCHAR",
     Key: {

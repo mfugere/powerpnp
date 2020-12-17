@@ -12,6 +12,11 @@
       <div class="card">
         <h3 class="card-header">{{cname}}</h3>
         <div class="card-body">Here are some details about your character.</div>
+        <div class="card-footer">
+          <button class="btn btn-secondary btn-lg" @click="$emit('setView', $event, 'Menu')">Back</button>
+          <button class="btn btn-danger btn-lg" @click="deleteChar" v-if="baseMode !== 'create'">Delete</button>
+          <button class="btn btn-primary btn-lg" @click="update" v-if="baseMode === 'edit'">Save</button>
+        </div>
       </div>
     </section>
   </div>
@@ -28,20 +33,18 @@ export default {
       cname: "",
       race: null,
       class: null,
-      stats: {
-        str: 0,
-        dex: 0,
-        con: 0,
-        int: 0,
-        wis: 0,
-        cha: 0
-      }
+      alignment: "",
+      avatar: null,
+      cindex: 0,
+      ref: ""
     }
   },
   mounted: function () {
     if (this.$store.state.characterEditMode !== "create") {
-      var ref = this.$store.state.characterEditMode.split("/")[2]
-      this.getCharacter({ ref: ref }).then((result) => {
+      var arrMode = this.$store.state.characterEditMode.split("/")
+      this.cindex = arrMode[1]
+      this.ref = arrMode[3]
+      this.getCharacter({ ref: this.ref }).then((result) => {
         var character = result.data.Item
         this.cname = character.NAME
       })
@@ -55,13 +58,22 @@ export default {
   methods: {
     ...mapActions([
       "getCharacter",
-      "updateCharacter"
+      "updateCharacter",
+      "deleteCharacter"
     ]),
     update: function () {
       var charObj = {
         cname: this.cname
       }
       this.updateCharacter(charObj)
+        .then((result) => this.$emit("setView", this.$event, "Menu", result.data))
+    },
+    deleteChar: function () {
+      var charObj = {
+        ref: this.ref,
+        cindex: this.cindex
+      }
+      this.deleteCharacter(charObj)
         .then((result) => this.$emit("setView", this.$event, "Menu", result.data))
     }
   }

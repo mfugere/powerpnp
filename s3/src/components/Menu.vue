@@ -4,9 +4,9 @@
     <div>
       <h2>My Characters</h2>
       <ul class="list-group list-group-horizontal" v-if="account && Object.keys(account).length > 0">
-        <template v-for="character in account.CHARACTERS">
+        <template v-for="(character, index) in account.CHARACTERS">
           <li class="list-group-item borderless" :key="character.REF">
-            <img src="@/assets/menu_icon_char.png" alt="character.NAME" @click="editCharacter('view' + character.REF)">
+            <img src="@/assets/menu_icon_char.png" alt="character.NAME" @click="editCharacter('view/' + index + character.REF)">
           </li>
         </template>
         <li class="list-group-item borderless">

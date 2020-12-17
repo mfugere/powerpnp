@@ -4,23 +4,18 @@ const ddb = new AWS.DynamoDB.DocumentClient()
 const lambda = new AWS.Lambda({ region: "us-east-1" })
 
 exports.handler = (event, context, callback) => {
-  const cname = JSON.parse(event.body).data
+  const ref = event.queryStringParameters.ref
+  const index = event.queryStringParameters.index
   const username = event.requestContext.authorizer.claims["cognito:username"]
-  const refId = crypto.randomBytes(10)
-  const ref = refId.toString("hex")
 
-  createCharacter(cname, ref, username).then(() => {
-    let newRefs = [{
-      REF: "/character/" + ref,
-      NAME: cname
-    }]
+  deleteCharacter(ref).then(() => {
     lambda.invoke({
       FunctionName: "updateAccount",
       Payload: JSON.stringify({
         username: username,
         res: "character",
-        ref: newRefs,
-        operation: "create"
+        ref: index,
+        operation: "delete"
       })
     }, function (err, data) {
       if (err) callback(null, {
@@ -56,16 +51,11 @@ exports.handler = (event, context, callback) => {
   })
 }
 
-let createCharacter = (cname, ref, username) => {
-  return ddb.put({
+let deleteCharacter = (ref) => {
+  return ddb.delete({
     TableName: "PPNPCHAR",
-    Item: {
-      REF: ref,
-      NAME: cname,
-      RACE: {},
-      CLASS: {},
-      STATS: {},
-      USERNAME: username
+    Key: {
+      REF: ref
     }
   }).promise()
 }
