@@ -62,14 +62,14 @@ export default {
       var arrMode = this.$store.state.characterEditMode.split("/")
       this.cindex = arrMode[1]
       this.ref = arrMode[3]
-      this.getCharacter({ ref: this.ref }).then((result) => {
+      this.getCharacter({ ref: this.ref }).then(result => {
         var character = result.data.Item
         this.cname = character.NAME
         this.alignment = character.ALIGNMENT
       })
     } else {
-      this.getAlignments().then((result) => {
-        this.alignments = result.data.Items
+      this.getAlignments().then(result => {
+        this.alignments = result.data.Items.sort((a, b) => a.REF - b.REF)
       })
     }
   },
