@@ -62,8 +62,8 @@ let createCharacter = (attrs, ref, username) => {
     Item: {
       REF: ref,
       NAME: attrs.NAME,
-      RACE: {},
-      CLASS: {},
+      RACE: attrs.RACE,
+      CLASS: attrs.CLASS,
       ALIGNMENT: attrs.ALIGNMENT,
       USERNAME: username
     }

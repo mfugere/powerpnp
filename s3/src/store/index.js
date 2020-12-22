@@ -88,6 +88,8 @@ export const store = new Vuex.Store({
       return await instance.post("/character", {
         data: {
           NAME: payload.cname,
+          RACE: payload.race,
+          CLASS: payload.cclass,
           ALIGNMENT: payload.alignment
         }
       }).catch(function (error) {
@@ -102,6 +104,12 @@ export const store = new Vuex.Store({
     },
     async getCharacter(context, payload) {
       return await instance.get("/character?ref=" + payload.ref)
+    },
+    async getRaces() {
+      return await instance.get("/race")
+    },
+    async getClasses() {
+      return await instance.get("/class")
     },
     async getAlignments() {
       return await instance.get("/alignment")
