@@ -99,7 +99,7 @@ export const store = new Vuex.Store({
       })
     },
     async deleteCharacter(context, payload) {
-      return await instance.delete("/character?ref=" + payload.ref + "&index=" + payload.cindex)
+      return await instance.delete("/character/" + payload.ref + "?index=" + payload.cindex)
       .catch(function (error) {
         throw new Error(error)
       })

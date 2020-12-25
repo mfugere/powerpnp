@@ -4,7 +4,7 @@ const ddb = new AWS.DynamoDB.DocumentClient()
 const lambda = new AWS.Lambda({ region: "us-east-1" })
 
 exports.handler = (event, context, callback) => {
-  const ref = event.queryStringParameters.ref
+  const ref = event.pathParameters.ref
   const index = event.queryStringParameters.index
   const username = event.requestContext.authorizer.claims["cognito:username"]
 
@@ -14,8 +14,8 @@ exports.handler = (event, context, callback) => {
       Payload: JSON.stringify({
         username: username,
         res: "character",
-        ref: index,
-        operation: "delete"
+        operation: "delete",
+        index: index
       })
     }, function (err, data) {
       if (err) callback(null, {

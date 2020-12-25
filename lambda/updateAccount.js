@@ -4,7 +4,7 @@ const ddb = new AWS.DynamoDB.DocumentClient()
 exports.handler = (event, context, callback) => {
   let username = event.username
   let colName = event.res.toUpperCase() + "S"
-  let ref = event.ref
+  let ref = event.ref || {}
   let operation = event.operation
   let index = event.index || -1
 
@@ -47,7 +47,7 @@ let updateAccount = (colName, username, ref, operation, index) => {
   } else if (operation === "update") {
     params.UpdateExpression = "SET #col[" + index + "] = :r"
     params.ExpressionAttributeValues = { ":r": ref }
-  } else if (operation === "delete") params.UpdateExpression = "REMOVE #col[" + ref + "]"
+  } else if (operation === "delete") params.UpdateExpression = "REMOVE #col[" + index + "]"
 
   return ddb.update(params).promise()
 }
