@@ -85,7 +85,9 @@ export const store = new Vuex.Store({
       return await instance.get("/account?username=" + payload.cuser.username)
     },
     async updateCharacter(context, payload) {
-      return await instance.post("/character", {
+      return await instance({
+        method: (payload.ref) ? "put" : "post",
+        url: "/character" + ((payload.ref) ? "/" + payload.ref + "?index=" + payload.cindex : ""),
         data: {
           NAME: payload.cname,
           RACE: payload.race,
@@ -103,7 +105,7 @@ export const store = new Vuex.Store({
       })
     },
     async getCharacter(context, payload) {
-      return await instance.get("/character?ref=" + payload.ref)
+      return await instance.get("/character/" + payload.ref)
     },
     async getRaces() {
       return await instance.get("/race")

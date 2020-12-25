@@ -40,7 +40,7 @@ export default {
     this.initUserPool()
   },
   mounted: function () {
-    this.initUser().then((account) => {
+    this.initUser().then(account => {
       this.account = account
     })
   },

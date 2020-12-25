@@ -3,7 +3,7 @@ const AWS = require("aws-sdk")
 const ddb = new AWS.DynamoDB.DocumentClient()
 
 exports.handler = (event, context, callback) => {
-  const ref = event.queryStringParameters.ref
+  const ref = event.pathParameters.ref
 
   getCharacter(ref).then((result) => {
     callback(null, {

@@ -4,12 +4,12 @@ const ddb = new AWS.DynamoDB.DocumentClient()
 const lambda = new AWS.Lambda({ region: "us-east-1" })
 
 exports.handler = (event, context, callback) => {
-  const attrs = JSON.parse(event.body).data
+  const attrs = JSON.parse(event.body)
   const username = event.requestContext.authorizer.claims["cognito:username"]
   const refId = crypto.randomBytes(10)
   const ref = refId.toString("hex")
 
-  createCharacter(attrs, ref, username).then(() => {
+  createCharacter(attrs, ref, username).then((result) => {
     let newRefs = [{
       REF: "/character/" + ref,
       NAME: attrs.NAME
