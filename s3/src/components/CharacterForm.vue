@@ -22,6 +22,21 @@
           <option v-for="alignment in alignments" :key="alignment.REF" :value="alignment.NAME">{{alignment.NAME}}</option>
         </select>
       </div>
+      <div class="form-group row justify-content-around">
+        <img class="col-sm-2 rounded img-thumbnail" :src="avatarURL">
+        <div class="col-sm-6">
+          <p>Upload an avatar for your character</p>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <button class="btn btn-outline-primary" @click="uploadAvatar">Upload</button>
+            </div>
+            <div class="custom-file">
+              <input type="file" class="custom-file-input" id="avatar" @change="pendingFile = $event.target.files[0]">
+              <label class="custom-file-label" for="avatar">{{pendingFile.name || "Choose file"}}</label>
+            </div>
+          </div>
+        </div>
+      </div>
       <button class="btn btn-secondary btn-lg" @click="$emit('goBack')">Back</button>
       <button class="btn btn-primary btn-lg" @click="update" :disabled="cname.length === 0 || !race || !cclass || !alignment">Save</button>
       <button class="btn btn-danger btn-lg" v-if="character.REF" @click="$emit('deleteChar')">Delete</button>
@@ -58,7 +73,8 @@ export default {
       race: "",
       cclass: "",
       alignment: this.character.ALIGNMENT || "",
-      avatar: "",
+      pendingFile: "",
+      avatarURL: require("@/assets/menu_icon_char.png"),
       alignments: [],
       races: [],
       classes: []
@@ -92,6 +108,21 @@ export default {
       }
       if (this.ref) charObj.ref = this.ref
       this.$emit("updateChar", this.$event, charObj)
+    },
+    uploadAvatar: function () {
+      const pendingFile = this.pendingFile
+      if (pendingFile !== "") {
+        const avObj = { avatar: { imgFile: pendingFile }, type: "character" }
+        const reader = new FileReader()
+        reader.readAsDataURL(pendingFile)
+        reader.onload = () => {
+          this.avatarURL = reader.result
+          this.$store.dispatch("uploadAvatar", avObj).then((result) => {
+            console.log(result)
+          })
+        }
+        reader.onerror = (error) => console.error(error)
+      }
     }
   }
 }

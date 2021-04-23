@@ -115,6 +115,13 @@ export const store = new Vuex.Store({
     },
     async getAlignments() {
       return await instance.get("/alignment")
+    },
+    async uploadAvatar(context, payload) {
+      return await instance.post("/avatar?type=" + payload.type, {
+        data: payload.avatar
+      }).catch(function (error) {
+        throw new Error(error)
+      })
     }
   }
 })
